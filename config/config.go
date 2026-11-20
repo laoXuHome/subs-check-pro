@@ -65,7 +65,8 @@ type Config struct {
 	CheckInterval        int     `yaml:"check-interval"`
 	CronExpression       string  `yaml:"cron-expression"`
 	Timeout              int     `yaml:"timeout"`
-	AliveCheckURL        string  `yaml:"alive-check-url"`
+	AliveCheckURL        string   `yaml:"alive-check-url"`
+	AliveCheckURLs       []string `yaml:"alive-check-urls"`
 	SpeedTestURL         string  `yaml:"speed-test-url"`
 	DownloadTimeout      int     `yaml:"download-timeout"`
 	DownloadMB           int     `yaml:"download-mb"`
