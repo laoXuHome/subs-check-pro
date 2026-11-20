@@ -4,6 +4,9 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"strings"
+
+	"github.com/sinspired/subs-check-pro/v3/config"
 )
 
 func CheckGoogle(httpClient *http.Client, ctx context.Context) (bool, error) {
@@ -14,7 +17,11 @@ func CheckGoogle(httpClient *http.Client, ctx context.Context) (bool, error) {
 }
 
 func CheckGstatic(httpClient *http.Client, ctx context.Context) (bool, error) {
-	return checkGoogleEndpoint(httpClient, ctx, "https://gstatic.com/generate_204", 204)
+	url := strings.TrimSpace(config.GlobalConfig.AliveCheckURL)
+	if url == "" {
+		url = "https://gstatic.com/generate_204"
+	}
+	return checkGoogleEndpoint(httpClient, ctx, url, 204)
 }
 
 // checkGoogleEndpoint 使用 HEAD 方法检查 URL 的状态码。
