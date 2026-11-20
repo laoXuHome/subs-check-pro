@@ -469,6 +469,8 @@ ghproxy-group:
   - https://github.dpik.top/
 
 # -----------获取订阅-----------
+# 重试间隔（秒），获取订阅失败后每轮重试前等待时间；小于 1 时按 1 秒处理
+sub-urls-retry-interval: 1
 # 重试次数(获取订阅失败后重试次数)
 sub-urls-retry: 3
 # 网络实在太差，就调高一点，比如 15
@@ -476,6 +478,10 @@ sub-urls-timeout: 10
 
 # 每个订阅的大小上限
 sub-url-max-size-mb: 50
+
+# 可选：启动时刷新 Mihomo 中 HTTP 类型的 proxy-provider；留空则关闭
+mihomo-api-url: ''
+mihomo-api-secret: ''
 
 # 网络拥塞保护：检测时自动探测本机网络，仅在连不上网时才收紧测活并发，恢复后自动加回
 # 如果觉得影响检测速度，可设为 false 完全关闭，如果网络和硬件设备不好，可设为 true，同时调整其他并发参数
