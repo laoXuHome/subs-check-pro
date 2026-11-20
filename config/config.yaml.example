@@ -59,7 +59,7 @@ proxy-server-nameserver:
 proxy-server-nameserver-policy:
   +.local: system
   +.baidu.com: 223.5.5.5
-  +.cloudflre.com: 1.1.1.1
+  +.cloudflare.com: 1.1.1.1
   +.github.com: 223.5.5.5
   +.githubusercontent.com: 223.5.5.5
 
