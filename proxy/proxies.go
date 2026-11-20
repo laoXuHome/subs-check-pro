@@ -642,7 +642,7 @@ func fetchRemoteSubUrls(listURL string) ([]string, error) {
 	if listURL == "" {
 		return nil, errors.New("远程列表为空")
 	}
-	data, err := FetchSubsData(listURL) // 假设已存在
+	data, err := FetchSubsDataWithPolicy(listURL)
 	if err != nil {
 		return nil, err
 	}
@@ -739,7 +739,7 @@ func processSubscription(
 	releaseFetch := sync.OnceFunc(func() { <-lim.fetch })
 	defer releaseFetch()
 
-	data, err := FetchSubsData(urlStr)
+	data, err := FetchSubsDataWithPolicy(urlStr)
 	if err != nil {
 		if !errors.Is(err, ErrIgnore) {
 			logFatal(err, urlStr)
