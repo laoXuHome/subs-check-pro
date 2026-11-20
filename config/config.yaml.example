@@ -66,6 +66,9 @@ proxy-server-nameserver-policy:
 # 超时时间(毫秒)(节点的最大延迟)，主要影响测活任务
 timeout: 6000
 
+# 节点测活筛选地址：每个节点会通过此地址判断是否可用，HTTP 状态码需为 204
+alive-check-url: 'https://gstatic.com/generate_204'
+
 # 并发线程数，用于未设置测活、测速、媒体解锁检测时，自动计算并发数的基准
 # 主要影响获取订阅任务，超过100会设置为100
 concurrent: 10
@@ -94,15 +97,23 @@ download-mb: 20
 # 限制与实际情况可能会有一定误差
 total-speed-limit: 0
 
-# 测速地址(注意 并发数*节点速度<最大网速 否则测速结果不准确)
+# 下载测速地址(注意 并发数*节点速度<最大网速 否则测速结果不准确)
 # 尽量不要使用Speedtest，Cloudflare提供的下载链接，因为很多节点屏蔽测速网站
 # 如果找不到稳定的测速地址，可以自建测速地址
+# 此字段只控制下载测速；节点可用性筛选地址请修改上面的 alive-check-url
 # speed-test-url: 'https://github.com/2dust/v2rayN/releases/download/7.16.2/v2rayN-windows-64-SelfContained.zip'
 # speed-test-url: 'random'
 # (留空关闭测速，如节点数量少，网络环境差，请确保测速功能关闭)
 # 建议在深夜、早上、下午等空闲时段检测，避开网络拥堵的晚高峰
 # 出口水管就那么大，运营商只能优先保障直播、影视和游戏之类的正常流量
 speed-test-url: ''
+
+# -----------原始订阅拉取策略-----------
+# always：每次测速都重新拉取原始订阅（默认，保持原行为）
+# never：只读取本地已缓存的原始订阅内容，不发起订阅源请求；首次使用前需先用 always/interval 拉取一次
+# interval：缓存未过期时不拉取，到期后刷新；支持 30m、12h、24h 等 Go duration 格式
+sub-fetch-policy: always
+sub-fetch-interval: 12h
 
 # 相似度阈值(Threshold)映射
 # 1.00 /32 (同 IP / 域名)
