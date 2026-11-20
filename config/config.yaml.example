@@ -109,10 +109,10 @@ total-speed-limit: 0
 speed-test-url: ''
 
 # -----------原始订阅拉取策略-----------
-# always：每次测速都重新拉取原始订阅（默认，保持原行为）
+# always：每次测速都重新拉取原始订阅
 # never：只读取本地已缓存的原始订阅内容，不发起订阅源请求；首次使用前需先用 always/interval 拉取一次
-# interval：缓存未过期时不拉取，到期后刷新；支持 30m、12h、24h 等 Go duration 格式
-sub-fetch-policy: always
+# interval：缓存未过期时不拉取，到期后刷新（默认）；支持 30m、12h、24h 等 Go duration 格式
+sub-fetch-policy: interval
 sub-fetch-interval: 12h
 
 # 相似度阈值(Threshold)映射
