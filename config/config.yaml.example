@@ -66,7 +66,7 @@ proxy-server-nameserver-policy:
 # 超时时间(毫秒)(节点的最大延迟)，主要影响测活任务
 timeout: 6000
 
-# 节点测活筛选地址：每个节点会通过此地址判断是否可用，HTTP 状态码需为 204
+# 节点筛选/延迟保活地址：收到任意 HTTP 状态码都算存活，连接失败才淘汰；再按延迟等条件筛选
 alive-check-url: 'https://gstatic.com/generate_204'
 
 # 并发线程数，用于未设置测活、测速、媒体解锁检测时，自动计算并发数的基准
