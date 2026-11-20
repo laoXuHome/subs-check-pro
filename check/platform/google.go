@@ -18,10 +18,6 @@ func CheckGoogle(httpClient *http.Client, ctx context.Context) (bool, error) {
 }
 
 func CheckGstatic(httpClient *http.Client, ctx context.Context) (bool, error) {
-	url := strings.TrimSpace(config.GlobalConfig.AliveCheckURL)
-	if url == "" {
-		url = "https://gstatic.com/generate_204"
-	}
 	urls := config.GlobalConfig.AliveCheckURLs
 	if len(urls) == 0 {
 		url := strings.TrimSpace(config.GlobalConfig.AliveCheckURL)
@@ -51,30 +47,29 @@ func CheckGstatic(httpClient *http.Client, ctx context.Context) (bool, error) {
 	return false, errors.New("未配置有效的节点保活地址")
 }
 
-
 // checkAliveEndpoint 只判断配置的保活地址是否能通过节点收到 HTTP 响应。
-// 任意 HTTP 状态码都视为链路可达，节点是否保留再由延迟等筛选条件决定。
+// 任意 HTTP 状态码都视为链路可达；节点是否进入后续阶段由其他筛选条件决定。
 func checkAliveEndpoint(httpClient *http.Client, ctx context.Context, url string) (bool, error) {
-\treq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-\tif err != nil {
-\t\treturn false, err
-\t}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return false, err
+	}
 
-\treq.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-\treq.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
-\treq.Header.Set("Accept-Language", "en-US,en;q=0.5")
-\t// 请求少量内容即可确认链路，避免下载完整网页或图标。
-\treq.Header.Set("Range", "bytes=0-0")
-\treq.Close = true
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+	req.Header.Set("Accept-Language", "en-US,en;q=0.5")
+	// 请求少量内容即可确认链路，避免下载完整网页或图标。
+	req.Header.Set("Range", "bytes=0-0")
+	req.Close = true
 
-\tresp, err := httpClient.Do(req)
-\tif err != nil {
-\t\tslog.Debug(err.Error())
-\t\treturn false, err
-\t}
-\tdefer resp.Body.Close()
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		slog.Debug(err.Error())
+		return false, err
+	}
+	defer resp.Body.Close()
 
-\treturn true, nil
+	return true, nil
 }
 
 // checkGoogleEndpoint 使用 HEAD 方法检查 URL 的状态码。
