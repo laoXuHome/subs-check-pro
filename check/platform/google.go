@@ -2,6 +2,7 @@ package platform
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -21,7 +22,33 @@ func CheckGstatic(httpClient *http.Client, ctx context.Context) (bool, error) {
 	if url == "" {
 		url = "https://gstatic.com/generate_204"
 	}
-	return checkAliveEndpoint(httpClient, ctx, url)
+	urls := config.GlobalConfig.AliveCheckURLs
+	if len(urls) == 0 {
+		url := strings.TrimSpace(config.GlobalConfig.AliveCheckURL)
+		if url == "" {
+			url = "https://gstatic.com/generate_204"
+		}
+		urls = []string{url}
+	}
+
+	var lastErr error
+	for _, url := range urls {
+		url = strings.TrimSpace(url)
+		if url == "" {
+			continue
+		}
+		alive, err := checkAliveEndpoint(httpClient, ctx, url)
+		if alive {
+			return true, nil
+		}
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return false, lastErr
+	}
+	return false, errors.New("未配置有效的节点保活地址")
 }
 
 
