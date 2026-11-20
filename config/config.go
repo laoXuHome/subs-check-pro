@@ -65,6 +65,7 @@ type Config struct {
 	CheckInterval        int     `yaml:"check-interval"`
 	CronExpression       string  `yaml:"cron-expression"`
 	Timeout              int     `yaml:"timeout"`
+	AliveCheckURL        string  `yaml:"alive-check-url"`
 	SpeedTestURL         string  `yaml:"speed-test-url"`
 	DownloadTimeout      int     `yaml:"download-timeout"`
 	DownloadMB           int     `yaml:"download-mb"`
@@ -93,6 +94,10 @@ type Config struct {
 	SubUrlsRetryInterval int     `yaml:"sub-urls-retry-interval"`
 	SubUrlsTimeout       int     `yaml:"sub-urls-timeout"`
 	SubUrlMaxSizeMB      int     `yaml:"sub-url-max-size-mb"`
+	// SubFetchPolicy controls when original subscription data is downloaded.
+	// always = download for every check; never = use disk cache only; interval = reuse cache until expiry.
+	SubFetchPolicy   string `yaml:"sub-fetch-policy"`
+	SubFetchInterval string `yaml:"sub-fetch-interval"`
 
 	// SubsParseBatch 每批次发往去重队列的节点数
 	// 生产者攒够该数量后整批发送，消费者逐批接收处理。
@@ -227,6 +232,9 @@ var OriginDefaultConfig = &Config{
 	SubsDedupeBatch: 100000,
 
 	SubUrlMaxSizeMB: 50,
+	SubFetchPolicy:   "always",
+	SubFetchInterval: "12h",
+	AliveCheckURL:    "https://gstatic.com/generate_204",
 
 	NetGuard: false,
 
