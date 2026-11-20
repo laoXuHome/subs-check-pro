@@ -66,7 +66,14 @@ proxy-server-nameserver-policy:
 # 超时时间(毫秒)(节点的最大延迟)，主要影响测活任务
 timeout: 6000
 
-# 节点筛选/延迟保活地址：收到任意 HTTP 状态码都算存活，连接失败才淘汰；再按延迟等条件筛选
+# 节点保活地址列表：按顺序请求，任意一个收到 HTTP 响应（状态码不限）即算存活；都连接失败才淘汰
+alive-check-urls:
+  - 'http://chatgpt.com/favicon.ico'
+  - 'http://github.com/'
+  - 'http://telegram.org/favicon.ico'
+  - 'http://www.youtube.com/'
+
+# 兼容单地址配置：只有上面的 alive-check-urls 为空时才使用此项
 alive-check-url: 'https://gstatic.com/generate_204'
 
 # 并发线程数，用于未设置测活、测速、媒体解锁检测时，自动计算并发数的基准
