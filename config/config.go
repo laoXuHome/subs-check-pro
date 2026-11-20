@@ -232,7 +232,7 @@ var OriginDefaultConfig = &Config{
 	SubsDedupeBatch: 100000,
 
 	SubUrlMaxSizeMB: 50,
-	SubFetchPolicy:   "always",
+	SubFetchPolicy:   "interval",
 	SubFetchInterval: "12h",
 	AliveCheckURL:    "https://gstatic.com/generate_204",
 
